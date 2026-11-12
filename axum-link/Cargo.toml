@@ -1,0 +1,27 @@
+[package]
+name = "axum-link"
+repository = "https://github.com/claviron/axum-link.git"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Axum application hosted by Claviron over Orbit Link"
+
+[workspace]
+
+[dependencies]
+claviron = { version = "=0.2.0-alpha.26", default-features = false, features = ["rust", "runner-orbit", "runner-socket", "supervisor", "axum", "bench", "websocket"] }
+clap = { version = "4", features = ["derive"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[profile.release]
+codegen-units = 1
+lto = "thin"
+opt-level = 3
+panic = "unwind"
+
+[profile.dev]
+codegen-units = 256
+debug = 1
+incremental = true
+opt-level = 1
+panic = "abort"

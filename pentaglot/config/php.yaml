@@ -1,0 +1,11 @@
+# Only the named persistent application needs PHP capacity.
+engine:
+  ini_scan_dir: config/php.d
+  warmup: [apps/php]
+sapi: null
+applications:
+  pentaglot-php:
+    script_path: apps/php/app.php
+    frameworks: []
+    instances:  ${PHP_INSTANCES}
+    max_queued: ${PHP_MAX_QUEUED}

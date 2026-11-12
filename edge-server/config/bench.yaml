@@ -1,0 +1,3 @@
+# The vhost.yaml host that answers Claviron's bench routes in this process: the
+# router axum.test reaches over Orbit.
+vhosts: [ edge.test ]

@@ -1,0 +1,51 @@
+orbit:
+  link:
+    # Per receiver: 128 running exchanges and 64 waiting exchanges.
+    max_in_flight: 128
+    max_queued: 64
+    # This application owns its fleet and declares its shape; every caller
+    # adopts it. The inbox holds control frames beside admitted work.
+    geometry:
+      fleet_capacity: 128
+      inbox_capacity: 256
+      inbox_payload_capacity: 17408
+      lane_capacity: 128
+      buffer_bytes: 65536
+# Shared defaults for the named listeners; execution also applies to Orbit.
+defaults:
+  listener:
+    execution: "${LISTENER_EXECUTION}"
+    h1:
+      header_read_timeout: null   # no head-read deadline while measuring
+    h2:
+      # 31-bit stream id space: effectively unlimited
+      max_concurrent_streams: 2147483647
+      # Rapid Reset caps (default 20 and 1,024).
+      max_pending_accept_reset_streams: 1000000
+      max_local_error_reset_streams: 1000000
+
+listeners:
+  application-tcp:
+    transport: tcp
+    listen: 127.0.0.1:8101
+    protocols: [h1, h2]
+    tcp:
+      backlog: 2048
+  application-unix:
+    transport: unix
+    listen: unix:/tmp/axum-link.sock
+    protocols: [h2]
+    uds:
+      backlog: 2048
+      mode: "0600"
+
+# What stands in front of the router, on every door: the schema an edge host uses.
+site:
+  root: public
+  routes:
+    /assets:
+      static: {}
+    /old:
+      redirect:
+        to: /
+        code: 307

@@ -1,0 +1,16 @@
+/target/
+/target-*/
+/.idea
+/logs/
+# Shared editor setup; active personal settings remain local.
+/.vscode/*
+!/.vscode/extensions.json
+!/.vscode/tasks.json
+!/.vscode/settings.json
+Cargo.lock
+
+.DS_Store
+
+# docs
+*.md
+!README.md

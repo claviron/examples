@@ -1,0 +1,91 @@
+# HTTP and Pusher WebSockets both arrive over Orbit. Start from this root.
+name: octane-link
+fleet_name: octane
+icon: laravel
+request_mode: application
+try_files: true
+assets: [ build, images ]
+orbit:
+  link:
+    # PHP instances supply eight running places. Link holds 184 waiting.
+    max_queued: 184
+    # This application owns its fleet and declares its shape; every caller
+    # adopts it. The inbox holds control frames beside admitted work.
+    geometry:
+      fleet_capacity: 32
+      inbox_capacity: 256
+      inbox_payload_capacity: 17408
+      lane_capacity: 128
+      buffer_bytes: 65536
+# Where each door runs, from .env.
+defaults:
+  listener:
+    execution: "${LISTENER_EXECUTION}"
+cache:
+  default: fleet
+  stores:
+    fleet:
+      driver: orbit
+    sessions:
+      driver: orbit
+database:
+  sqlite:
+    octane:
+      path: ${DB_DATABASE}
+      busy_timeout: 100ms
+      pool:
+        pool_size: 1
+        idle_size: 0
+        acquire_timeout: 30s
+        idle_timeout: 10m
+        max_lifetime: 30m
+# The application owns its SQLite sample at database/demo.sqlite.
+requests:
+  max_body_size: 64 MiB
+  body_read_timeout: 30s
+responses:
+  idle_timeout: 60s
+broadcasting:
+  key: ${PUSHER_APP_KEY}
+  secret: ${PUSHER_APP_SECRET}
+  client_events: true
+logging:
+  system_log:
+    path: storage/logs/octane-link.log
+    format: line
+    truncate: true
+  channels:
+    laravel:
+      adapter: file
+      path: storage/logs/lumenize.log
+      format: line
+      truncate: true
+php:
+  events:
+    capacity: 128
+  engine:
+    ini_path: ${PHP_DIR}/etc/php.ini
+    ini_scan_dir: ${PHP_DIR}/etc/conf.d/embed
+    warmup: [app, bootstrap, config, routes, storage/framework/views, vendor/laravel/framework/src, vendor/symfony]
+  lifecycle:
+    graceful_timeout: 60s
+    execution_timeout: 30s
+  sapi: null
+  application:
+    script_path: lumenize.php
+    env_file: .env
+    env:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      OCTANE_SERVER: claviron
+      CACHE_STORE: claviron
+      SESSION_DRIVER: claviron
+      SESSION_STORE: claviron_sessions
+      SESSION_BLOCK: "false"
+      BROADCAST_CONNECTION: claviron
+      LOG_CHANNEL: claviron
+    instances: 8
+    retry:
+      max_attempts: null
+      backoff: 1s
+      backoff_max: 10s

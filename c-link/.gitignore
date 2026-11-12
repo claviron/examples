@@ -1,0 +1,9 @@
+/build/
+/logs/
+*.local.sh
+.DS_Store
+/.idea/
+
+# docs
+*.md
+!README.md

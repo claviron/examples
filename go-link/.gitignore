@@ -1,0 +1,15 @@
+/build/
+/lib/
+/logs/
+*.local.sh
+.DS_Store
+/.idea/
+
+# docs
+*.md
+!README.md
+!/docs/**/*.md
+!/CONTRIBUTING.md
+!/SECURITY.md
+!ARCHITECTURE.md
+!/.agents/skills/*/SKILL.md

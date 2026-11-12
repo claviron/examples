@@ -1,0 +1,24 @@
+default:
+  root: public
+  access_log: "off"
+  transport:
+    non_ssl: serve
+    protocols: [h1]
+    h1: { upgrade: true }
+  routes:
+    /assets:
+      static: {}
+    /lua:
+      lua: { application: pentaglot-lua }
+    /deno:
+      js: { application: pentaglot-deno }
+    /php:
+      php:
+        runner: application
+        application: pentaglot-php
+    /python:
+      python: {}
+    /c:
+      module: hello
+    /cpp:
+      module: hello-cpp

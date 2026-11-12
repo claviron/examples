@@ -1,0 +1,37 @@
+# Both applications serve a Link fleet, so a Link task runs each of them and
+# is the one owner of that fleet's process count.
+graceful_timeout: null
+tasks:
+  # `kind: worker`: the command is one worker of fleet `c`, and the task owns
+  # the count. `static` keeps it fixed.
+  c-link:
+    attempts: unlimited
+    graceful_timeout: null
+    link:
+      fleet: c
+      kind: worker
+      workers: { policy: static, count: 4 }
+      command:
+        program: ./build/c-link
+        cwd: ../c-link
+        args: [--execution, current]
+        log: console
+
+  # `kind: runner`: the command is a runner that owns its own workers, declared
+  # in its launch file; the task starts and stops the runner.
+  axum-link:
+    attempts: unlimited
+    graceful_timeout: null
+    link:
+      fleet: axum
+      kind: runner
+      command:
+        program: ./target/release/axum-link
+        cwd: ../axum-link
+        args: [--config, managed.yaml]
+        env:
+          RUST_LOG: info
+          # The runner's process runtime; its Orbit door runs on a thread of
+          # its own (`execution: dedicated` in managed.yaml).
+          TOKIO_WORKER_THREADS: "1"
+        log: console

@@ -1,0 +1,18 @@
+# Compiled libraries, relative to where the server runs. The c-module example's
+# build puts them here. What they register runs as declared below, with no defaults; a
+# mismatch stops boot, and a change takes a server restart.
+modules:
+  - modules/libhello.so
+  - modules/libhello_cpp.so
+
+applications:
+  hello:
+    instances: 1
+    max_queued: 256
+    frameworks: [c]
+    icon: c
+  hello-cpp:
+    instances: 1
+    max_queued: 64
+    frameworks: [c++]
+    icon: c++

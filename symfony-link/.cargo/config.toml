@@ -1,0 +1,5 @@
+[env]
+# One Skene master and up to 40 serving processes.
+CLAVIRON_FLEET_CAPACITY = "41"
+# The Symfony Link fleet accommodates the runner and its Edge callers.
+ORBIT_LINK_FLEET_CAPACITY = { value = "128", force = true }

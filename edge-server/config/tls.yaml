@@ -1,0 +1,26 @@
+# What is missing here is made at boot, before TLS reads this file: the CA, the
+# default identity and each host's certificate (the Edge's demo certificate component). `.ssl` is
+# relative to the working directory and is never committed.
+certstore:
+  dir: .ssl
+  authority:
+    local: demo
+  organization:
+    name: Edge Demo
+    email: demo@example.test
+
+certs:
+  - edge.test
+  - axum.test
+  - c.test
+  - uv.test
+  - fastapi.test
+  - axum-tcp.test
+  - axum-h2.test
+  - axum-uds.test
+  - java.test
+  - js.test
+  - octane.test
+  - symfony.test
+  - go.test
+  - upload.test

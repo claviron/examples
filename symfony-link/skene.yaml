@@ -1,0 +1,27 @@
+name: symfony-link
+fleet_name: symfony
+orbit:
+  link:
+    workers: { policy: static, count: 6 }
+    max_queued: 334     # Six receivers, each with 8 running and 334 waiting.
+    # The inbox holds one receiver's window (8 running, 334 waiting) and
+    # control frames; one caller keeps at most 128 exchanges open.
+    geometry:
+      fleet_capacity: 128
+      inbox_capacity: 512
+      inbox_payload_capacity: 17408
+      lane_capacity: 128
+      buffer_bytes: 65536
+defaults:
+  listener:
+    execution: dedicated
+php:
+  engine:
+    ini_scan_dir: config/php.d
+    warmup: [app, vendor, var/cache/prod]
+  application:
+    script_path: application.php
+    instances: 8
+    env:
+      APP_ENV: prod
+      APP_DEBUG: "0"

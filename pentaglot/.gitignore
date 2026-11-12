@@ -1,0 +1,12 @@
+/target/
+/logs/
+/modules/
+/.idea/
+/apps/php/vendor/
+/apps/php/var/
+__pycache__/
+!/apps/php/composer.lock
+!BENCHMARK.md
+.DS_Store
+/.cache/
+Cargo.lock

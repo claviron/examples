@@ -1,0 +1,14 @@
+[package]
+name = "demo-certs"
+version = "0.1.0"
+publish = false
+edition = "2024"
+description = "Claviron component that makes the demo certificates a tls.yaml names."
+
+[workspace]
+
+[dependencies]
+async-trait = "0.1"
+claviron = { version = "=0.2.0-alpha.26", default-features = false, features = ["tls", "runtime"] }
+tokio = { version = "1", features = ["rt"] }
+tracing = "0.1"

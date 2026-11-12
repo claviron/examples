@@ -1,0 +1,14 @@
+{
+  "folders": [
+    { "name": "edge-server", "path": "edge-server" },
+    { "name": "c-module", "path": "c-module" },
+    { "name": "c-link", "path": "c-link" },
+    { "name": "uv-link", "path": "uv-link" },
+    { "name": "fastapi-link", "path": "fastapi-link" },
+    { "name": "octane-link", "path": "octane-link" },
+    { "name": "symfony-link", "path": "symfony-link" },
+    { "name": "axum-link", "path": "axum-link" },
+    { "name": "go-link", "path": "go-link" },
+    { "name": "js-link", "path": "js-link" }
+  ]
+}

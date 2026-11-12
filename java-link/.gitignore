@@ -1,0 +1,12 @@
+/build/
+/lib/
+/.cache/
+/AGENTS.local.md
+*.local.sh
+*.class
+*.log
+*.pid
+.DS_Store
+/.idea/
+
+/logs/

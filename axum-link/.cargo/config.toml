@@ -1,0 +1,16 @@
+# Link ceilings for this application: the largest shape it may declare.
+# The shape itself is declared in runner.yaml and read by every caller.
+[env]
+# One master and up to 40 workers in each process family.
+CLAVIRON_FLEET_CAPACITY = "41"
+
+# Up to 40 Edge callers and 40 application workers share one Link fleet.
+ORBIT_LINK_FLEET_CAPACITY = { value = "128", force = true }
+# Unread frames per receiver lane, request and control frames together.
+ORBIT_LINK_INBOX_CAPACITY = { value = "1024", force = true }
+ORBIT_LINK_INBOX_PAYLOAD_CAPACITY = { value = "17408", force = true }
+# Body stream slots per originating worker, across all target workers;
+# below the inbox, which takes the replies to all of them.
+ORBIT_LINK_LANE_CAPACITY = { value = "512", force = true }
+# Buffered bytes per direction; independent of the total body size.
+ORBIT_LINK_BUFFER_BYTES = { value = "65536", force = true }

@@ -1,0 +1,72 @@
+# The Axum process over its sockets, beside its `orbit:` route in vhost.yaml.
+# Capacity is required per profile; it is not inherited or a request queue.
+upstreams:
+  axum_uds:
+    protocol: h2
+    connection:
+      connect_timeout: 1s
+    # A Unix socket has no host of its own to name in the request.
+    authority: axum-uds.test
+    origins:
+      - name: uds
+        target: unix:///tmp/axum-link.sock
+    capacity:
+      warmup: ${UPSTREAM_WARMUP}
+      max_streams: ${UPSTREAM_UDS_MAX_STREAMS}
+      max_live: ${UPSTREAM_UDS_MAX_IDLE}
+      max_idle: ${UPSTREAM_UDS_MAX_IDLE}
+
+  axum_tcp:
+    protocol: h1
+    connection:
+      connect_timeout: 1s
+    origins:
+      - name: tcp
+        target: tcp://127.0.0.1:8101
+    capacity:
+      warmup: ${UPSTREAM_WARMUP}
+      min_idle: ${UPSTREAM_TCP_MIN_IDLE}
+      max_live: ${UPSTREAM_TCP_MAX_IDLE}
+      max_idle: ${UPSTREAM_TCP_MAX_IDLE}
+
+  # The same TCP door, by prior knowledge.
+  axum_h2:
+    protocol: h2
+    connection:
+      connect_timeout: 1s
+    origins:
+      - name: tcp_h2
+        target: tcp://127.0.0.1:8101
+    capacity:
+      warmup: ${UPSTREAM_WARMUP}
+      max_streams: ${UPSTREAM_H2_MAX_STREAMS}
+      max_live: ${UPSTREAM_H2_MAX_IDLE}
+      max_idle: ${UPSTREAM_H2_MAX_IDLE}
+
+  # An external upload sink reports received bytes and SHA-256 for
+  # large-upload checks across an upstream.
+  upload_sink:
+    protocol: h1
+    connection:
+      connect_timeout: 1s
+    origins:
+      - name: sink
+        target: tcp://127.0.0.1:3060
+    capacity:
+      max_live: 32
+      max_idle: 8
+      min_idle: 0
+
+apps:
+  upload_sink:
+    routes:
+      - profile: upload_sink
+  axum_tcp:
+    routes:
+      - profile: axum_tcp
+  axum_h2:
+    routes:
+      - profile: axum_h2
+  axum_uds:
+    routes:
+      - profile: axum_uds

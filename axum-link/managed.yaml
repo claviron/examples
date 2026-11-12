@@ -1,0 +1,21 @@
+# TaskService starts the runner master; this runner grows its own workers.
+orbit:
+  link:
+    max_in_flight: 128
+    # Total admitted: 128 running and up to 64 waiting in the receiver.
+    max_queued: 64
+    workers: { policy: dynamic, min: 4, max: 16, step: 1, retire_idle: off }
+    geometry:
+      fleet_capacity: 128
+      inbox_capacity: 256
+      inbox_payload_capacity: 17408
+      lane_capacity: 128
+      buffer_bytes: 65536
+
+defaults:
+  listener:
+    execution: dedicated
+
+# This launch uses Orbit only, without binding the example's TCP/UDS doors.
+listeners: {}
+site: {}

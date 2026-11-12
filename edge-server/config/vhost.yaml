@@ -1,0 +1,162 @@
+# Independent application processes, reached by name over Orbit Link.
+# These local demo hosts deliberately expose unauthenticated diagnostic routes.
+js.test:
+  root: ../js-link/public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  routes:
+    /assets:
+      static: {}
+  orbit:
+    - { application: js-link, fleet: orj }
+
+octane.test:
+  root: ../octane-link/public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  routes:
+    /build:
+      static: {}
+  orbit:
+    - { application: octane-link, fleet: octane }
+
+symfony.test:
+  root: ../symfony-link/public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  requests: { queue_timeout: 100ms }
+  routes:
+    /build:
+      static: {}
+  orbit:
+    - { application: symfony-link, fleet: symfony, balance: first }
+
+edge.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+
+axum.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  requests: { queue_timeout: 100ms }
+  orbit:
+    - { application: axum-link, fleet: axum }
+
+go.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  orbit:
+    - { application: go-link, fleet: go }
+
+c.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  requests: { queue_timeout: 100ms }
+  orbit:
+    - { application: c-link, fleet: c, balance: first }
+
+uv.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  orbit:
+    - { application: uv-link, fleet: uv }
+
+java.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  orbit:
+    - { application: java-link, fleet: java }
+
+fastapi.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+    h3: { wt: true }
+  orbit:
+    - { application: fastapi-link, fleet: fastapi }
+
+# The Axum process over a socket, beside its `orbit:` route above: an
+# application reaches Edge either way. Profiles are in upstream.yaml.
+axum-tcp.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+  upstream: axum_tcp
+
+axum-h2.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+  upstream: axum_h2
+
+axum-uds.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+  upstream: axum_uds
+
+# Large uploads across an H1 upstream with explicit body limits.
+upload.test:
+  root: public
+  transport:
+    non_ssl: serve
+    protocols: [h3, h2, h1]
+    h1: { upgrade: true }
+    h2: { connect_protocol: true }
+  requests:
+    max_body_size: 64 MiB
+    body_read_timeout: 30s
+  upstream: upload_sink

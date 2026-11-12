@@ -1,0 +1,42 @@
+# Listener addresses come from .env.
+defaults:
+  listener:
+    # Every listener declares these two, as a value or `off`.
+    requests: { max_body_size: off, body_read_timeout: off }
+    # `inherit` or `dedicated`, from .env.
+    execution: "${LISTENER_EXECUTION}"
+
+listeners:
+  local-unix:
+    transport: unix
+    listen: "${EDGE_UDS_LISTEN}"
+    protocols: [h2, h1]
+    graceful_timeout: 5s
+    uds:
+      mode: "0600"
+
+  public-http:
+    transport: tcp
+    tls: false
+    protocols: h1
+    listen: "${EDGE_HTTP_LISTEN}"
+    graceful_timeout: 5s
+    h1:
+      header_read_timeout: null
+
+  public-https:
+    transport: tcp
+    tls: true
+    protocols: [h2, h1]
+    listen: "${EDGE_HTTPS_LISTEN}"
+    graceful_timeout: 5s
+    handshake_timeout: 10s
+
+  public-h3:
+    transport: quic
+    protocols: h3
+    listen: "${EDGE_HTTPS_LISTEN}"
+    graceful_timeout: 5s
+    handshake_timeout: 5s
+    quic:
+      idle_timeout: 10s

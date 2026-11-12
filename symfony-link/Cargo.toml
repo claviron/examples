@@ -1,0 +1,20 @@
+[package]
+name = "symfony-link"
+repository = "https://github.com/claviron/symfony-link.git"
+version = "0.1.0"
+edition = "2024"
+publish = false
+description = "Symfony application connected to Claviron Edge through Skene and Orbit"
+
+[workspace]
+
+[dependencies]
+skene = "=0.2.2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+debug = 0
+lto = "thin"
+panic = "unwind"

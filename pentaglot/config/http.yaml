@@ -1,0 +1,13 @@
+listeners:
+  demo:
+    transport: tcp
+    tls: false
+    protocols: h1
+    listen: "${PENTAGLOT_LISTEN}"
+    tcp:
+      backlog: 2048
+    requests:
+      max_body_size: off
+      body_read_timeout: off
+    h1:
+      header_read_timeout: null

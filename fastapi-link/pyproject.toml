@@ -1,0 +1,14 @@
+[project]
+name = "fastapi-link"
+version = "0.1.0"
+requires-python = ">=3.15,<3.16"
+dependencies = [
+    "fastapi==0.143.0",
+    "jinja2>=3.1.6",
+]
+
+[project.urls]
+Repository = "https://github.com/claviron/fastapi-link.git"
+
+[dependency-groups]
+bench = ["claviron-bench[fastapi]==0.1.0"]
