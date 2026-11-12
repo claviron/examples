@@ -75,3 +75,15 @@ writes each host `tls.yaml` names, with a marker it can remove later. Add a host
 there and run it again. Then open `https://fastapi.test:8443`, with the application
 running. Firefox keeps its own trust store unless
 `security.enterprise_roots.enabled` is on.
+
+## Publish a combined snapshot
+
+From the source checkouts, run `scripts/publish-examples.py <version>` with
+Python 3.12 or newer. It exports the locally available `origin/main` commits
+with `git archive`, checks dependencies, and prints the temporary directory
+containing the archive and the exact source revisions. Use
+`--ref <example>=<commit>` to select a different registry-ready revision.
+
+Review the dry run, then rerun with the same revisions and `--push` to append
+one commit to `claviron/examples` on GitHub. Git uses its configured identity
+and credentials.
