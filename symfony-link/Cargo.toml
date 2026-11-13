@@ -9,7 +9,7 @@ description = "Symfony application connected to Claviron Edge through Skene and 
 [workspace]
 
 [dependencies]
-skene = "=0.2.2"
+skene = "0.2.4"
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 
 [profile.release]

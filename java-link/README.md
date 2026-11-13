@@ -19,17 +19,17 @@ Orbit Java library.
 ## Prepare
 
 Set `JAVA_HOME` to a JDK 25 installation. The binding is on Maven Central as
-`dev.claviron:orbit:0.1.1`: an API JAR, and one native JAR per platform under
+`dev.claviron:orbit:0.1.3`: an API JAR, and one native JAR per platform under
 a classifier (`macos-aarch64`, `linux-x86_64`, `linux-aarch64`,
 `freebsd-x86_64`, `freebsd-aarch64`). This example uses no build tool, so it
 takes the two JARs directly:
 
 ```sh
 mkdir -p lib
-base=https://repo1.maven.org/maven2/dev/claviron/orbit/0.1.1
-curl -fL -o lib/orbit-0.1.1.jar "$base/orbit-0.1.1.jar"
-curl -fL -o lib/orbit-0.1.1-macos-aarch64.jar "$base/orbit-0.1.1-macos-aarch64.jar"
-export ORBIT_JAVA_CLASSPATH="$PWD/lib/orbit-0.1.1.jar:$PWD/lib/orbit-0.1.1-macos-aarch64.jar"
+base=https://repo1.maven.org/maven2/dev/claviron/orbit/0.1.3
+curl -fL -o lib/orbit-0.1.3.jar "$base/orbit-0.1.3.jar"
+curl -fL -o lib/orbit-0.1.3-macos-aarch64.jar "$base/orbit-0.1.3-macos-aarch64.jar"
+export ORBIT_JAVA_CLASSPATH="$PWD/lib/orbit-0.1.3.jar:$PWD/lib/orbit-0.1.3-macos-aarch64.jar"
 ./prepare.sh
 ```
 
@@ -37,12 +37,14 @@ Use the classifier of your OS and CPU; Maven Central publishes a checksum
 beside each file. `lib/` is not committed, and the scripts do not download
 the binding. A project that uses Maven or Gradle declares the same
 coordinates, with the classifier for the native JAR. The binding and the Edge
-must speak the same Link: `orbit` 0.1.1 is built for Claviron 0.2.0-alpha.26.
+must speak the same Link: `orbit` 0.1.3 is built for Claviron 0.2.2.
 
 ## Run
 
+From the examples root, with `ORBIT_JAVA_CLASSPATH` still set:
+
 ```sh
-./run.sh
+scripts/run.sh java-link
 ```
 
 The application defaults to `java-link` in fleet `java`. `--name`, `--fleet` and

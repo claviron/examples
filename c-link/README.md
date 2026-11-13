@@ -5,12 +5,23 @@ listener. The application name is `c-link`, fleet `c`; the example Edge serves i
 
 ## Prepare
 
-Extract the matching [Orbit C v0.1.0 release archive](https://github.com/claviron/c/releases/tag/v0.1.0).
-Use a C compiler and CMake 3.20 or later.
+C Link declares its Orbit C dependency in `vcpkg.json`. By default, the script
+fetches the v0.1.2 overlay port from the Orbit C repository into `build/`, and
+vcpkg installs the corresponding release package. Use a C compiler, CMake 3.20
+or later and a bootstrapped vcpkg checkout. From the `examples/` directory:
 
 ```sh
-ORBIT_C_PREFIX=/path/to/extracted/archive ./c-link/prepare.sh
+VCPKG_ROOT=/path/to/vcpkg ./c-link/prepare.sh
 ```
+
+Set `VCPKG_OVERLAY_PORTS` to use an existing overlay directory. To build with
+unreleased changes in a local Orbit C checkout, use `--dev` with its path:
+
+```sh
+./c-link/prepare.sh --dev /path/to/orbit-c-checkout
+```
+
+Both commands update `c-link/build/c-link`. Each mode keeps its own CMake build directory.
 
 ## Run
 

@@ -4,8 +4,8 @@ An Axum router hosted by Claviron, reached through Orbit as application
 `axum-link` in fleet `axum`, and through named TCP and Unix listeners. It has
 no Edge dependency. An external Edge can forward over Orbit or a socket.
 
-`main.rs` uses `Runner::with_router(router)` with the `rust` and `axum`
-capabilities. The shared runner prepares
+`main.rs` uses `claviron_runner::Runner::with_router(router)` with the
+runner's `axum` feature. The shared runner prepares
 policy, optional route contributions, ingress, management and worker launch
 inheritance. The application supplies no language owner or manual ingress setup.
 

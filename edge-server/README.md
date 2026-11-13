@@ -1,7 +1,7 @@
 # Edge example
 
 This Edge reaches the application examples over Orbit and their configured
-socket upstreams. Claviron comes from crates.io, at the version in `Cargo.toml`.
+socket upstreams. See `Cargo.toml` for the Claviron dependency.
 
 ## Task-managed applications
 

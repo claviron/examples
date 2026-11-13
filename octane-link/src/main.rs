@@ -1,7 +1,7 @@
 use lumenize::{Options, Runner};
 mod app;
 use app::routes::rust_interceptor;
-use app::services::{ OrbitalCellService};
+use app::services::OrbitalCellService;
 
 // Use mimalloc as the global allocator.
 #[global_allocator]

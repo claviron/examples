@@ -72,19 +72,6 @@ def export(examples, tree, refs):
 
 
 def prepare_layout(tree):
-    for name, old, new in (
-        ("run.sh", '"$SCRIPTS/../.."', '"$SCRIPTS/.."'),
-        ("trust-ca.sh", '"$SCRIPTS/../../edge-server"', '"$SCRIPTS/../edge-server"'),
-    ):
-        script = tree / "scripts" / name
-        source = script.read_text()
-        if old in source:
-            script.write_text(source.replace(old, new).replace(
-                "# This script lives in shared/scripts; examples/scripts is a local link to it.\n", ""
-            ))
-        elif new not in source:
-            raise ValueError(f"unrecognized root layout in scripts/{name}")
-
     workspace = tree / "examples.code-workspace"
     source = workspace.read_text()
     data = json.loads(source)

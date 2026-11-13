@@ -1,6 +1,6 @@
 # Examples
 
-Application examples for Claviron `0.2.0-alpha.26`. Rust dependencies come
+Application examples for Claviron `0.2.2`. Rust dependencies come
 from crates.io, JavaScript from npm, Java from Maven Central, and PHP from
 Packagist. The C and Go bindings provide native libraries in GitHub Releases.
 
@@ -25,21 +25,22 @@ paths, hardware, configuration and comparison limits.
 
 ## Run
 
-Each Rust application is an independent workspace. Prepare it separately, then
-run its existing binary from this repository's root:
+Use `scripts/run.sh` from the examples root in either checkout layout. `--build`
+builds the selected example. Add `--run` or `--start` to launch it after building:
 
 ```sh
-scripts/run.sh edge-server
+scripts/run.sh --build --release axum-link
+scripts/run.sh --build --start --release edge-server
 scripts/run.sh --release --workers 4 pentaglot
 scripts/run.sh --start --release fastapi-link
 scripts/run.sh --release symfony-link
 scripts/run.sh --status fastapi-link
 scripts/run.sh --stop fastapi-link
-scripts/run.sh go-link
 ```
 
 `APP_NAME` is the final argument. `--release` selects `target/release` instead
-of `target/debug`; the launcher does not compile or install anything. Other
+of `target/debug`. Without `--build` or `--prepare`, the launcher uses existing
+artifacts. Other
 options, including `--fleet` and `--workers`, pass unchanged to the application.
 `--config` is a runner's launch file, whose directory is its configuration directory;
 an Edge reads a directory of files and takes `--config-dir`. Its options and configuration own the defaults. The working
@@ -49,13 +50,27 @@ directory is the application's directory.
 console logs live in the application's `logs/`; `RUN_LOG_DIR` can select another
 directory for an isolated instance.
 
-The native entrypoint covers Edge, Pentaglot, FastAPI, Octane, Symfony and Axum.
-For Go, C and libuv, run `go-link/prepare.sh`, `c-link/prepare.sh` or
-`uv-link/prepare.sh` separately first; the launcher uses the corresponding `build/<name>` binary
-in either profile. See its README for native library preparation.
-Orbit uses its separate JavaScript launcher; Lua is embedded by Edge and has no
-standalone runner. Open [examples.code-workspace](examples.code-workspace) or an
-individual application folder for development.
+For C, libuv, Go and Java, set the dependency paths in the example's README,
+then run `scripts/run.sh --build <name>` or `scripts/run.sh --prepare <name>`.
+C, libuv and Go launch from
+`build/<name>`. Java uses `build/java-link.jar` and `ORBIT_JAVA_CLASSPATH`.
+
+```sh
+scripts/run.sh --prepare c-link
+scripts/run.sh --prepare java-link
+scripts/run.sh java-link
+scripts/run.sh --prepare js-link
+scripts/run.sh --start --runtime=node js-link
+scripts/run.sh --stop --runtime=node js-link
+```
+
+JS preparation installs the locked npm dependencies and builds the frontend.
+JS runs with Deno by default. Select `--runtime=node` or `--runtime=bun` to
+switch. Use the same runtime for start, status and stop. `ORBIT_WORKERS`
+sets the process count, which defaults to eight.
+
+Open [examples.code-workspace](examples.code-workspace) or an individual
+application folder for development.
 
 ## Open it in a browser
 

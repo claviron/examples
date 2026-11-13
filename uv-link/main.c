@@ -164,7 +164,7 @@ int main(int argc, char **argv) {
     report(&app, "runtime open", status);
     if (status != ORBIT_OK) goto close_loop;
     orbit_options options = {.abi_version = ORBIT_ABI_VERSION, .incarnation = 1,
-        .max_in_flight = EXCHANGES, .max_waiting = EXCHANGES, .io_buffer_bytes = WINDOW};
+        .max_in_flight = EXCHANGES, .max_queued = 0, .io_buffer_bytes = WINDOW};
     status = orbit_open(app.runtime, (const uint8_t *)fleet, strlen(fleet),
         (const uint8_t *)name, strlen(name), &options, &app.application);
     report(&app, "application open", status);

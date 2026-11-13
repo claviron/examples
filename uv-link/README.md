@@ -2,21 +2,16 @@
 
 A C application over Orbit Link, with callbacks dispatched by its own libuv loop.
 It opens no HTTP listener and starts no supervisor. It uses the same native
-library and handlers API as C Link. Tokio still drives Orbit I/O.
+library and handlers API as C Link. Tokio drives Orbit I/O. The example sets `max_in_flight` to 128 and `max_queued` to zero.
 
 ## Prepare
 
-Build the C binding first. With a C compiler, CMake, pkg-config and libuv installed:
+Extract the matching [Orbit C v0.1.2 release archive](https://github.com/claviron/c/releases/tag/v0.1.2).
+Use a C compiler and CMake 3.20 or later. Install libuv and pkg-config as well.
 
 ```sh
-ORBIT_C_DIR=/path/to/orbit-c \
-ORBIT_C_LIBRARY_DIR=/path/to/native-library-directory \
-uv-link/prepare.sh
+ORBIT_C_PREFIX=/path/to/extracted/archive ./uv-link/prepare.sh
 ```
-
-`ORBIT_C_DIR` must contain the matching ABI 4 header. Preparation only builds the
-binary; it does not start applications or install dependencies. `prepare.sh`
-refreshes `include/orbit.h` from that binding; CMake uses the local header.
 
 ## Run
 

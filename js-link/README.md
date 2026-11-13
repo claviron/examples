@@ -5,7 +5,7 @@ over [Orbit Link](https://crates.io/crates/orbitive). Deno, Node and Bun use the
 same native [`@claviron/orbit`](https://www.npmjs.com/package/@claviron/orbit)
 addon, installed from npm with a prebuilt binary for the target OS and CPU.
 Nothing is compiled during installation. The addon and the Edge must speak
-the same Link: `@claviron/orbit` 0.1.5 is built for Claviron 0.2.0-alpha.26.
+the same Link: `@claviron/orbit` 0.1.7 is built for Claviron 0.2.2.
 
 ## Prepare and run
 
@@ -20,14 +20,17 @@ npm run serve       # Deno
 # npm run serve:bun
 ```
 
-Alternatively, use `scripts/run.sh [start|run|status|stop] [deno|node|bun]` from this directory. The script starts
-the application's processes (`ORBIT_WORKERS`, 8 unless set); it does not install or build.
+From the examples root, `scripts/run.sh --prepare js-link` installs the locked
+dependencies and builds the frontend. `scripts/run.sh --start --runtime=node js-link`
+starts the application's processes (`ORBIT_WORKERS`, 8 unless set). Use
+`--runtime=deno` or `--runtime=bun` to select another runtime. Use the same
+runtime when checking status or stopping.
 The default identity is application `js-link` in fleet `orj`. `ORBIT_APP` and
 `ORBIT_FLEET` can override it; update the edge's route to match if changed.
 
 ## Through the example edge
 
-Start `..` from the repository root. Its `orbit.test` vhost
+Start `scripts/run.sh --start edge-server` from the examples root. Its `orbit.test` vhost
 serves `/assets` from this application's generated `public/` directory and
 routes other requests to the named application over SHM, not TCP or UDS.
 Resolve `orbit.test` to loopback for browser use. The commands below assume the

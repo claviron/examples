@@ -5,8 +5,8 @@ use claviron::AppState;
 use claviron::axum::Router;
 use claviron::axum::response::Response;
 use claviron::axum::routing::{any, get};
-use claviron::runner::Runner;
-use claviron::runner::websocket::{Message, WebSocket, WebSocketOffer};
+use claviron_runner::Runner;
+use claviron_runner::websocket::{Message, WebSocket, WebSocketOffer};
 use options::Options;
 
 fn router(state: AppState) -> Router {

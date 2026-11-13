@@ -72,7 +72,7 @@ php:
     execution_timeout: 30s
   sapi: null
   application:
-    script_path: lumenize.php
+    script_path: application.php
     env_file: .env
     env:
       APP_ENV: production

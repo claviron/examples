@@ -7,11 +7,11 @@ publish = false
 [workspace]
 
 [dependencies]
-claviron = { version = "0.2.0-alpha.26", default-features = false, features = ["edge", "axum", "websocket", "logging", "module"] }
-claviron-asgi = { version = "0.2.0-alpha.26", features = ["backend"] }
-claviron-deno = { version = "0.2.0-alpha.26", default-features = false, features = ["edge", "fetch", "websocket"] }
-claviron-lua = { version = "0.2.0-alpha.26", features = ["edge", "orbit", "server", "websocket"] }
-claviron-php = { version = "0.2.0-alpha.26", features = ["embed", "backend"] }
+claviron = { version = "0.2.2", default-features = false, features = ["edge", "axum", "websocket", "logging", "module"] }
+claviron-asgi = { version = "0.2.2", features = ["backend"] }
+claviron-deno = { version = "0.2.1", default-features = false, features = ["edge", "fetch", "websocket"] }
+claviron-lua = { version = "0.2.1", features = ["edge", "orbit", "server", "websocket"] }
+claviron-php = { version = "0.2.1", features = ["embed", "backend"] }
 async-trait = "0.1"
 clap = { version = "4", features = ["derive"] }
 http-body-util = "0.1"

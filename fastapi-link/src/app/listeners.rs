@@ -2,8 +2,8 @@
 
 use claviron::AppState;
 use claviron::orbit::link::application::{EdgeConnected, EdgeDisconnected};
-use claviron::runner::EdgeShutdownInitiated;
 use claviron::runtime::{Register, registry};
+use gufi::EdgeShutdownInitiated;
 
 /// Holds nothing and runs nothing: registering is all it does.
 pub struct Listeners;

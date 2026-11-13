@@ -2,8 +2,8 @@ use std::path::PathBuf;
 use std::str::FromStr;
 
 use clap::Parser;
-use claviron::runner::{Runner, RunnerOptions};
 use claviron::{FleetName, ServerName};
+use claviron_runner::{Runner, RunnerOptions};
 
 #[derive(Parser)]
 #[command(about = "Serve an Axum application over Claviron Orbit Link", version)]

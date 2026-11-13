@@ -7,8 +7,9 @@
 #   scripts/trust-ca.sh --dry-run   print what would run
 set -euo pipefail
 
-SCRIPTS="$(cd -P -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd)"
-EDGE="$(cd -- "$SCRIPTS/../edge-server" && pwd)"
+SCRIPTS="$(cd -P -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPTS/lib/layout.sh"
+EDGE="$(examples_root "$SCRIPTS")/edge-server"
 TLS="$EDGE/config/tls.yaml"
 MARK="# claviron-examples"
 LINUX_NAME="claviron-examples.crt"

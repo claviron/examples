@@ -15,7 +15,7 @@ the module version and your platform, then build. From `examples/`:
 
 ```sh
 mkdir -p go-link/lib
-curl -L https://github.com/claviron/go/releases/download/v0.1.1/claviron-go-0.1.1-macos-aarch64.tar.gz \
+curl -L https://github.com/claviron/go/releases/download/v0.1.3/claviron-go-0.1.3-macos-aarch64.tar.gz \
   | tar -xz -C go-link/lib
 ORBIT_GO_LIBRARY_DIR="$(pwd)/go-link/lib" go-link/prepare.sh
 ```
@@ -23,7 +23,7 @@ ORBIT_GO_LIBRARY_DIR="$(pwd)/go-link/lib" go-link/prepare.sh
 `lib/` is not committed. The release's `SHA256SUMS` lists each archive's
 checksum. Preparation builds the binary; the launcher only runs it. The
 binding and the Edge must speak the same Link: this module version is built
-for Claviron 0.2.0-alpha.26.
+for Claviron 0.2.2.
 
 The application defaults to 128 running exchanges and zero queued exchanges.
 Set `--max-in-flight` and `--max-queued` to tune these limits.

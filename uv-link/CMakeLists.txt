@@ -1,16 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(uv_link LANGUAGES C)
 
-set(ORBIT_C_LIBRARY_DIR "" CACHE PATH "Directory containing libclaviron_orbit")
-if(NOT ORBIT_C_LIBRARY_DIR)
-    message(FATAL_ERROR "Set ORBIT_C_LIBRARY_DIR to the native library directory")
-endif()
-find_library(ORBIT_NATIVE claviron_orbit PATHS "${ORBIT_C_LIBRARY_DIR}" NO_DEFAULT_PATH REQUIRED)
+find_package(OrbitC 0.1.0 CONFIG REQUIRED)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBUV REQUIRED IMPORTED_TARGET libuv)
 
 add_executable(uv_link main.c)
 set_target_properties(uv_link PROPERTIES OUTPUT_NAME uv-link C_STANDARD 11 C_STANDARD_REQUIRED ON C_EXTENSIONS OFF)
 target_compile_options(uv_link PRIVATE -Wall -Wextra -Werror)
-target_include_directories(uv_link PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/include")
-target_link_libraries(uv_link PRIVATE "${ORBIT_NATIVE}" PkgConfig::LIBUV)
+target_link_libraries(uv_link PRIVATE OrbitC::orbit PkgConfig::LIBUV)
