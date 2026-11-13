@@ -22,3 +22,5 @@ storage/
 /logs/
 identifier.sqlite
 .DS_Store
+# Keep the FastAPI lockfile in the combined examples repository.
+!/Cargo.lock

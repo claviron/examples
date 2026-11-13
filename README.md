@@ -1,6 +1,6 @@
 # Examples
 
-Application examples for Claviron `0.2.2`. Rust dependencies come
+Application examples for Claviron `0.2.3`. Rust dependencies come
 from crates.io, JavaScript from npm, Java from Maven Central, and PHP from
 Packagist. The C and Go bindings provide native libraries in GitHub Releases.
 
