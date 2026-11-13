@@ -13,7 +13,7 @@ use claviron::pipeline::extension::RouteLayer;
 use claviron::pipeline::plan::HostLayerBuilder;
 use claviron::pipeline::{HostHandler, HostHandlerFuture, HostRequest};
 use claviron::http::ServiceResult;
-use claviron::runtime::{AppState, Component, registry};
+use claviron::runtime::{AppState, Component, Register, registry};
 use http_body_util::BodyExt;
 use serde::Serialize;
 
@@ -35,6 +35,12 @@ struct BenchJson {
 #[derive(Default)]
 pub struct Native {
     requests: AtomicU64,
+}
+
+impl Register<AppState> for Native {
+    fn register(state: &AppState) -> registry::Result<()> {
+        claviron::edge::register_routable(state, Arc::new(Self::default()))
+    }
 }
 
 impl Component<AppState> for Native {

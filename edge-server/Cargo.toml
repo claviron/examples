@@ -12,7 +12,7 @@ claviron = { version = "0.2.2", features = ["config-watch", "edge", "tasks", "be
 async-trait = "0.1"
 clap = { version = "4.6", features = ["derive"] }
 mimalloc = "0.1"
-tokio = { version = "1", features = ["macros", "rt-multi-thread", "signal"] }
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 tracing = "0.1"
 
 # Keep the example application and edge on the same build profile.
