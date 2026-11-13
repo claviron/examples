@@ -43,28 +43,25 @@
 <p><button id="all">Run all five</button> <a href="/python/events">Python event stream</a></p>
 <main></main>
 <section class="benchmark" aria-labelledby="benchmark-title">
-  <h2 id="benchmark-title">Five languages under load</h2>
-  <p>Recorded JSON throughput from a release-built Edge, with all five runtimes loaded.
+  <h2 id="benchmark-title">JSON routes under load</h2>
+  <p>JSON throughput with all five runtimes and both native modules loaded.
     Each path is measured separately over HTTP/1.1 keep-alive.</p>
   <p id="benchmark-summary" class="benchmark-meta">Loading recorded results…</p>
   <div class="table-scroll">
     <table id="benchmark-table" hidden>
       <thead><tr><th scope="col">Application</th><th scope="col">Successful req/s</th>
         <th scope="col">Concurrency</th><th scope="col">p99</th>
-        <th scope="col">CPU avg</th><th scope="col">RSS before</th><th scope="col">RSS after</th><th scope="col">Errors</th></tr></thead>
+        <th scope="col">CPU µs/request</th><th scope="col">RSS before</th>
+        <th scope="col">RSS after</th><th scope="col">RSS +120s</th><th scope="col">Errors</th></tr></thead>
       <tbody></tbody>
     </table>
   </div>
   <p id="benchmark-hardware" class="benchmark-meta"></p>
   <p id="benchmark-notes" class="benchmark-meta"></p>
-  <p class="benchmark-meta">Runtime settings for each measurement are recorded above.
-    Lua coroutine concurrency, Deno isolates, PHP instances and ASGI event loops are different execution models.
-    RSS and CPU cover all measured Edge processes with all five runtimes loaded.
-    CPU is the CPU-time delta over the measurement window; 100% equals one core.
-    Worker-mode RSS is a sum and counts shared pages per process.</p>
-  <p>These archived measurements include the earlier Symfony-based PHP application;
-    the current PHP application uses no framework. They are not a language or framework ranking.
-    <a href="/assets/benchmark.json">Measurement data</a></p>
+  <p class="benchmark-meta">CPU is the master and workers' combined CPU time per completed response.
+    RSS sums the same processes and counts shared pages per process.
+    The +120s column shows RSS after two minutes idle.</p>
+  <p><a href="/assets/benchmark.json">Measurement data</a></p>
 </section>
 <script type="module">
   const runtimes = [
@@ -127,19 +124,22 @@
       const format = new Intl.NumberFormat("en", { maximumFractionDigits: 0 });
       const memory = bytes => typeof bytes === "number" ? `${(bytes / 2**20).toFixed(1)} MiB` : "—";
       const table = document.querySelector("#benchmark-table");
+      const modules = { c: "C module", cpp: "C++ module" };
       for (const result of report.results) {
         const runtime = runtimes.find(item => item.id === result.runtime);
         const row = document.createElement("tr");
         const title = document.createElement("td");
-        title.textContent = `${runtime?.name ?? result.runtime} · ${result.path}`;
+        title.textContent = `${runtime?.name ?? modules[result.runtime] ?? result.runtime} · ${result.path}`;
         row.append(title);
+        const idle = result.post_load_samples?.find(sample => sample.requested_seconds === 120);
         const values = result.error
           ? ["Incomplete", report.connections, "—", "—", memory(result.rss_before_bytes),
-             memory(result.rss_after_bytes), "See raw results"]
+             memory(result.rss_after_bytes), memory(idle?.rss_bytes), "See raw results"]
           : [format.format(result.requests_per_second), report.connections,
-             `${result.p99_ms.toFixed(2)} ms`, typeof result.cpu_percent === "number" ? `${result.cpu_percent.toFixed(1)}%` : "—",
+             `${result.p99_ms.toFixed(3)} ms`, typeof result.cpu_us_per_request === "number" ? result.cpu_us_per_request.toFixed(2) : "—",
              memory(result.rss_before_bytes),
-             memory(result.rss_after_bytes), Object.values(result.errors).reduce((sum, n) => sum + n, 0)];
+             memory(result.rss_after_bytes), memory(idle?.rss_bytes),
+             Object.values(result.errors).reduce((sum, n) => sum + n, 0)];
         for (const value of values) {
           const cell = document.createElement("td"); cell.textContent = String(value); row.append(cell);
         }
@@ -150,7 +150,7 @@
         `${report.serving_processes === 1 ? "process" : "processes"} · ${report.build} · ` +
         `${report.complete ? "complete" : "includes errors or incomplete cases"}`;
       document.querySelector("#benchmark-hardware").textContent = `${report.hardware} · ` +
-        `${report.measured_at.slice(0, 10)} · source ${report.source_revision.slice(0, 7)}` +
+        `${report.measured_at.slice(0, 10)} UTC · source ${report.source_revision.slice(0, 7)}` +
         (report.source_modified ? " + local changes" : "");
       document.querySelector("#benchmark-notes").textContent = report.notes ?? "";
       table.hidden = false;

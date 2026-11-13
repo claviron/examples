@@ -56,7 +56,8 @@ can select a venv for an application that needs one.
 
 The PHP application requires no Composer packages or framework preparation.
 `apps/php/app.php` loads `Pentaglot\Php\Application` from
-`apps/php/src/Application.php`. Each of eight fixed instances creates one object,
+`apps/php/src/Application.php`. Each fixed instance creates one object. The
+default environment sets `PHP_INSTANCES=16` per serving process. Each instance
 receives requests with `claviron_application_receive()` and returns buffered JSON
 with `claviron_application_respond()`. Its counter persists between requests.
 The class handles `GET /php` and `POST /php/echo`, including UTF-8 bodies, and
@@ -99,39 +100,28 @@ the launcher's `stop` command after clients have finished.
 
 ## Benchmark
 
-These archived Linux measurements used the earlier elastic PHP application
-model (eight initial instances, ceiling 64 per serving worker), including the
-former embedded Symfony application. They have not been rerun for the current
-framework-free, fixed-instance application.
+Measured from the published Claviron 0.2.3 examples snapshot on AlmaLinux 8.10
+x86-64, with two Xeon E5-2650 v2 CPUs (32 logical CPUs) and 125 GiB RAM. Each
+path used a fresh master and 16 workers, 128 persistent HTTP/1.1 connections,
+eight wrk threads and five minutes of load. Each worker loaded all five
+runtimes and both native modules, with one Deno isolate and 16 fixed PHP
+instances.
 
-Linux x86-64; two Xeon E5-2650 v2 CPUs, 16 physical cores / 32 logical CPUs,
-125 GiB RAM. Release/native with mimalloc release; Tokio default multi_thread.
-Each language uses a fresh master and 16 workers, 128 connections and 5 minutes
-of load, followed by 120 seconds idle with the server still running.
-
-| Language | Successful req/s | CPU µs/request | p99 (ms) | RSS start → end → +120s (MiB) | Errors |
+| Application | Successful req/s | CPU µs/request | p99 (ms) | RSS start → end → +120s (MiB) | Errors |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Rust | 280,113 | 69.39 | 8.151 | 2,942.3 → 2,994.8 → 2,994.8 | 0 |
-| Lua | 108,810 | 198.69 | 5.072 | 2,936.6 → 3,014.9 → 3,014.9 | 0 |
-| Deno | 95,398 | 236.77 | 8.110 | 2,464.0 → 3,326.5 → 3,307.9 | 0 |
-| PHP / Symfony 8.2-dev | 32,547 | 919.39 | 12.005 | 3,439.3 → 3,548.5 → 3,482.3 | 0 |
-| PHP / plain | 134,978 | 156.60 | 10.391 | 2,798.5 → 2,905.3 → 2,901.2 | 0 |
-| Python / Gufi-ASGI | 123,932 | 194.95 | 6.694 | 2,936.7 → 3,015.9 → 3,018.0 | 0 |
+| Rust | 396,655 | 41.05 | 6.508 | 2,029.4 → 2,071.0 → 2,071.1 | 0 |
+| Lua | 130,192 | 147.61 | 3.685 | 2,032.6 → 2,078.6 → 2,078.3 | 0 |
+| Deno | 183,446 | 112.02 | 22.039 | 2,420.1 → 3,821.1 → 3,808.8 | 0 |
+| Plain PHP | 227,377 | 89.32 | 5.987 | 2,023.9 → 2,109.9 → 2,109.7 | 0 |
+| Python / ASGI | 155,864 | 147.66 | 4.969 | 2,021.8 → 2,078.6 → 2,078.4 | 0 |
+| C module | 306,174 | 60.94 | 2.946 | 2,004.8 → 2,058.3 → 2,058.2 | 0 |
+| C++ module | 303,422 | 61.94 | 2.868 | 2,019.8 → 2,073.8 → 2,074.2 | 0 |
 
-CPU is aggregate master/worker CPU time per completed request. RSS sums those
-17 processes with all five runtimes loaded; shared pages count per process.
-The Deno row uses one isolate per worker. Rust, Lua and Python retain the
-original binary; both PHP rows use the optimized embed bridge and eight Deno
-isolates per worker. PHP starts with eight warm contexts in every case.
-Plain PHP retains its earlier pool and warmup packages. Symfony uses 8.2-dev,
-production cache warmup and the explicit OPcache settings above.
-The [original measurements](public/assets/benchmark.json),
-[earlier Plain PHP report](public/assets/benchmark-php-plain.json),
-[updated Plain PHP report](public/assets/benchmark-php-plain-optimized.json),
-[Symfony 8.2 report](public/assets/benchmark-symfony82.json),
-and [updated Deno report](public/assets/benchmark-deno-multiplexed.json) include
-settings, source revisions, CPU totals and idle RSS samples. See
-[BENCHMARK.md](BENCHMARK.md) for the full history.
+CPU is aggregate master and worker CPU time per completed response. RSS sums
+the same 17 processes and counts shared pages per process. The +120s sample
+was taken with the server still running and idle. See [BENCHMARK.md](BENCHMARK.md)
+for the procedure and [measurement data](public/assets/benchmark.json) for
+per-process samples.
 
 ## Ownership
 

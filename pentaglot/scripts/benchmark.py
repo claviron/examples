@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Measure the five JSON handlers with wrk and save a page-readable report."""
+"""Measure the JSON handlers with wrk and save a page-readable report."""
 
 import argparse
 import hashlib
@@ -17,6 +17,7 @@ from urllib.request import urlopen
 
 
 RUNTIMES = ("rust", "lua", "deno", "php", "python")
+MODULES = {"c": "c", "cpp": "c++"}
 SUMMARY = r'''
 done = function(summary, latency, requests)
   io.write(string.format(
@@ -92,7 +93,7 @@ def main():
     parser.add_argument("--connections", type=int, required=True)
     parser.add_argument("--threads", type=int, required=True)
     parser.add_argument("--duration", required=True, help="wrk duration, such as 1m")
-    parser.add_argument("--runtime", action="append", choices=RUNTIMES, help="Measure only selected runtime(s); default: all five")
+    parser.add_argument("--runtime", action="append", choices=(*RUNTIMES, *MODULES), help="Select a runtime or module; default: the five runtimes")
     parser.add_argument("--binary", type=Path, required=True, help="Serving release binary")
     parser.add_argument("--expected-master-pid", type=int, help="Reject responses from a different master process")
     parser.add_argument("--native", action="store_true", help="Record a target-cpu=native release build")
@@ -127,10 +128,11 @@ def main():
 
     base = args.url.rstrip("/")
     process_ids = set()
-    for runtime in RUNTIMES:
+    for runtime in (*RUNTIMES, *(name for name in selected if name in MODULES)):
         with urlopen(f"{base}/{runtime}") as response:
             value = json.load(response)
-            if response.status != 200 or value.get("runtime") != runtime:
+            identity = value.get("application") if runtime in MODULES else value.get("runtime")
+            if response.status != 200 or identity != MODULES.get(runtime, runtime):
                 raise RuntimeError(f"{runtime}: unexpected preflight response")
             process_ids.add(response.headers.get("x-pentaglot-pid"))
     if None in process_ids:
@@ -138,7 +140,7 @@ def main():
     observed_pids = {int(pid) for pid in process_ids}
     if args.workers is None:
         if len(observed_pids) != 1:
-            raise RuntimeError("standalone mode requires one serving process for all five runtimes")
+            raise RuntimeError("standalone mode requires one serving process for all preflight routes")
         root_pid = next(iter(observed_pids))
     else:
         parents = subprocess.check_output(
@@ -188,7 +190,7 @@ def main():
         "generator": (version.stdout or version.stderr).splitlines()[0],
         "method": "GET JSON; sequential cases; all five runtimes remain loaded",
         "measured_runtimes": selected,
-        "preflight": "one untimed GET per runtime before measurement",
+        "preflight": "one untimed GET per runtime and selected module before measurement",
         "access_logging": False,
         "memory_metric": "RSS before/after each case; all five runtimes included; worker mode sums master and workers and counts shared pages per process",
         "cpu_metric": "Cumulative process CPU-time delta divided by wall time; 100 percent equals one fully used CPU core",
