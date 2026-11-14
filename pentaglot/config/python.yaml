@@ -1,3 +1,4 @@
+name: pentaglot-python
 target: app:app
 module_path: apps/python
 # Null uses the CPython installation selected at build time. This application's

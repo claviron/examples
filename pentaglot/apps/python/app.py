@@ -21,7 +21,7 @@ async def app(scope, receive, send):
         await receive()  # websocket.connect
         await send({"type": "websocket.accept"})
         await send({"type": "websocket.send", "text": json.dumps({
-            "event": "connected", "engine": "claviron-asgi", "path": scope["path"],
+            "event": "connected", "engine": "claviron-python", "path": scope["path"],
             "client": scope.get("client"),
         })})
         while True:
@@ -69,7 +69,7 @@ async def app(scope, receive, send):
         status = 200 if path in ("/python", "/python/echo") else 404
         requests += 1
         response = json.dumps({
-            "runtime": "python", "engine": "claviron-asgi", "method": scope["method"],
+            "runtime": "python", "engine": "claviron-python", "method": scope["method"],
             "path": path, "client": scope.get("client"), "body": body.decode(), "requests": requests,
         }, separators=(",", ":")).encode()
         await send({"type": "http.response.start", "status": status,

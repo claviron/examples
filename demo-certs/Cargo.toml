@@ -9,6 +9,6 @@ description = "Claviron component that makes the demo certificates a tls.yaml na
 
 [dependencies]
 async-trait = "0.1"
-claviron = { version = "0.2.3", default-features = false, features = ["tls", "runtime"] }
+claviron = { version = "0.2.5", default-features = false, features = ["tls", "runtime"] }
 tokio = { version = "1", features = ["rt"] }
 tracing = "0.1"

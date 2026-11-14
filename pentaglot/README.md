@@ -10,7 +10,7 @@ persistent framework-free PHP application and one Python ASGI application.
 | `/lua` | Lua / Olua | `apps/lua/app.lua` |
 | `/deno` | JavaScript/TypeScript / Deno Core | `apps/deno/app.ts` |
 | `/php` | Native PHP application | `apps/php/app.php` |
-| `/python` | Python / `claviron-asgi` | `apps/python/app.py` |
+| `/python` | Python / `claviron-python` | `apps/python/app.py` |
 
 Every application answers JSON at its prefix and accepts `POST <prefix>/echo`.
 `<prefix>/bench/plain` and `<prefix>/bench/json` answer `ok` and `{"message":"ok"}`.
@@ -76,7 +76,7 @@ response bodies.
 
 All configuration paths follow the process working directory, which the
 launcher sets to this example. Rust, Lua, Deno, PHP and Python use their
-existing public composition APIs. `claviron-asgi` owns Python's startup and
+existing public composition APIs. `claviron-python` owns Python's startup and
 final shutdown, using a blocking executor for native boot/join.
 
 ## Check

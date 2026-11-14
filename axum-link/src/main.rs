@@ -32,8 +32,5 @@ async fn echo(mut socket: WebSocket) {
 #[tokio::main]
 async fn main() -> claviron::Result<()> {
     let options = Options::parse();
-    Runner::from(options)
-        .with_router(router)
-        .run()
-        .await
+    Runner::from(options).with_router(router).run().await
 }

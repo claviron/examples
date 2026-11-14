@@ -8,5 +8,5 @@ pub fn register(state: &AppState) -> registry::Result<()> {
     claviron_lua::register(state)?;
     claviron_deno::register(state)?;
     claviron_php::register(state)?;
-    claviron_asgi::register(state)
+    claviron_python::register(state)
 }
