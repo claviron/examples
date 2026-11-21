@@ -175,7 +175,7 @@ def publish(tree, version):
 def main():
     args = arguments()
     examples = Path(__file__).resolve().parents[2]
-    output = Path(tempfile.mkdtemp(prefix="claviron-examples-"))
+    output = Path(tempfile.mkdtemp(prefix="claviron-examples-")).resolve()
     print(f"Output: {output}", flush=True)
     tree = output / "tree"
     tree.mkdir()

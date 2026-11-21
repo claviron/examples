@@ -21,13 +21,69 @@ orbit:
 defaults:
   listener:
     execution: "${LISTENER_EXECUTION}"
+# Doors of the application's own, for trying it without the Edge. Where TLS
+# offers HTTP/2 and HTTP/1.1 through ALPN, the order is the server's
+# preference: h2 first, or a client offering both gets HTTP/1.1.
+listeners:
+  # Plain HTTP/1.
+  application-tcp:
+    transport: tcp
+    listen: 127.0.0.1:8102
+    protocols: [h1]
+  # HTTPS with the store's default identity; asks for no client certificate.
+  application-tls:
+    transport: tcp
+    listen: 127.0.0.1:8103
+    protocols: [h2, h1]
+    tls: on
+  # The same HTTPS, requiring a client certificate the store's demo
+  # authority signed: the declaration an Edge host makes in its tls block.
+  application-mtls:
+    transport: tcp
+    listen: 127.0.0.1:8104
+    protocols: [h2, h1]
+    tls:
+      client_auth:
+        authority:
+          local: demo
+# The certificate store, in the schema of Claviron's tls.yaml. The TLS door
+# serves the default identity. What is missing is made at boot, before TLS
+# reads it: the CA, unless one is already here, then each named certificate
+# (demo-certs). `.ssl` is relative to the working directory and is never
+# committed; put an authority you already trust at .ssl/ca/demo to use it.
+tls:
+  certstore:
+    dir: .ssl
+    authority:
+      local: demo
+    organization:
+      name: Octane Link Demo
+      email: demo@example.test
+  default:
+    path: servers/octane.test/fullchain.pem
+  certs:
+    - octane.test
+# Redis connections, for the cache stores below that name one. Only the URL
+# is required.
+redis:
+  connections:
+    default:
+      url: ${REDIS_URL}
 cache:
   default: fleet
   stores:
     fleet:
       driver: orbit
+    # One shared table: a worker that restarts reads the sessions the others
+    # wrote, which a worker-local copy would not hold.
     sessions:
       driver: orbit
+      mode: shm
+    # Redis, through the connection the redis section declares.
+    redis:
+      driver: redis
+      connection: default
+      prefix: "octane:"
 database:
   sqlite:
     octane:
@@ -64,9 +120,13 @@ php:
   events:
     capacity: 128
   engine:
-    ini_path: ${PHP_DIR}/etc/php.ini
-    ini_scan_dir: ${PHP_DIR}/etc/conf.d/embed
-    warmup: [app, bootstrap, config, routes, storage/framework/views, vendor/laravel/framework/src, vendor/symfony]
+    # This application's own php.ini, and no scan directory: PHP reads no
+    # other ini file, whatever the installation or the environment names.
+    ini_path: php.ini
+    ini_scan_dir: ""
+    # Compiled views are not warmed: Blade rewrites an outdated one on its
+    # first render, after the warmup has already cached the old file.
+    warmup: [app, bootstrap, config, routes, vendor/laravel/framework/src, vendor/symfony]
   lifecycle:
     graceful_timeout: 60s
     execution_timeout: 30s

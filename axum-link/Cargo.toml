@@ -9,8 +9,8 @@ description = "Axum application hosted by Claviron over Orbit Link"
 [workspace]
 
 [dependencies]
-claviron = { version = "0.2.5", default-features = false, features = ["bench"] }
-claviron-runner = { version = "0.2.2", default-features = false, features = ["axum", "orbit", "socket", "supervisor", "websocket"] }
+claviron = { version = "0.2.8", default-features = false, features = ["bench"] }
+claviron-runner = { version = "0.2.3", default-features = false, features = ["axum", "orbit", "socket", "supervisor", "websocket"] }
 clap = { version = "4", features = ["derive"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 

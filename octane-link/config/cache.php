@@ -52,6 +52,11 @@ return [
             'runtime_store' => 'fleet',
         ],
 
+        'claviron_redis' => [
+            'driver' => 'claviron',
+            'runtime_store' => 'redis',
+        ],
+
         'claviron_sessions' => [
             'driver' => 'claviron',
             // Dedicated because flush() clears a complete runtime store.

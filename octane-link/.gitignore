@@ -29,10 +29,12 @@ Thumbs.db
 
 
 # Added by cargo
-
+.cargo/checkout.local.toml
 /target
 /Cargo.lock
 !/composer.lock
 
 /storage/lumenize.sock
+# Certificates and keys made at boot, and any authority put there.
+/.ssl/
 /logs/

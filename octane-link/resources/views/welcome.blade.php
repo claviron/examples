@@ -20,14 +20,15 @@
 <main
     id="echo-demo"
     data-key="{{ env('PUSHER_APP_KEY') }}"
-    data-host="{{ env('PUSHER_HOST', 'socket.home') }}"
-    data-port="{{ env('PUSHER_PORT', 443) }}"
+    data-port="{{ request()->getPort() }}"
 >
     <header>
         <p class="eyebrow">CLAVIRON · LARAVEL · ECHO</p>
         <h1>Native broadcast, familiar client.</h1>
         <p class="lead">Laravel calls the native broadcaster. Embedded PHP publishes into Orbit. PusherJS receives it over WebSocket.</p>
         <div class="status"><span id="status-dot"></span><span id="status">Connecting…</span></div>
+        <p class="hint"><a href="{{ route('hits') }}">One counter, two languages</a>: Rust and PHP adding to one shared value.
+            <a href="{{ route('tiles') }}">One Orbit atomic, two languages</a>: tiles handed out by one shared atomic.</p>
     </header>
 
     <section class="grid">

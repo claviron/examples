@@ -8,7 +8,7 @@ description = "Example Claviron edge reaching applications over Orbit."
 [workspace]
 
 [dependencies]
-claviron = { version = "0.2.5", features = ["config-watch", "edge", "tasks", "bench", "log-pipeline", "upstream", "tls", "websocket", "webtransport"] }
+claviron = { version = "0.2.8", features = ["config-watch", "edge", "tasks", "bench", "log-pipeline", "upstream", "tls", "websocket", "webtransport"] }
 async-trait = "0.1"
 clap = { version = "4.6", features = ["derive"] }
 mimalloc = "0.1"

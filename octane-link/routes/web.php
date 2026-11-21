@@ -1,13 +1,15 @@
 <?php
 
 use App\Http\Controllers\BroadcastController;
+use App\Http\Controllers\ClientCertificateController;
 use App\Http\Controllers\DatabaseCapabilitiesController;
 use App\Http\Controllers\DatabaseController;
 use App\Http\Controllers\DemoEventController;
+use App\Http\Controllers\HitsController;
 use App\Http\Controllers\InvocationController;
-use App\Http\Controllers\OrbitalCellController;
 use App\Http\Controllers\RuntimeController;
 use App\Http\Controllers\SessionController;
+use App\Http\Controllers\TilesController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('welcome');
@@ -15,10 +17,31 @@ Route::view('/todos', 'todos')->name('todos');
 
 Route::get('/runtime', RuntimeController::class)->name('runtime');
 Route::get('/runtime/sleep', [RuntimeController::class, 'sleep'])->name('runtime.sleep');
-Route::get('/_lumenize/php', [OrbitalCellController::class, 'hit'])->name('cell.hit');
-Route::get('/_lumenize/php/value', [OrbitalCellController::class, 'value'])->name('cell.value');
 Route::get('/events/demo', DemoEventController::class)->name('events.demo');
 Route::get('/events/shared', [DemoEventController::class, 'shared'])->name('events.shared');
+
+// The fleet's hit count from PHP; /_lumenize/rust is the same value from Rust.
+Route::get('/hits', [HitsController::class, 'show'])->name('hits');
+Route::controller(HitsController::class)
+    ->prefix('_lumenize/php')
+    ->name('hits.php.')
+    ->group(function (): void {
+        Route::get('/', 'hit')->name('hit');
+        Route::get('/value', 'value')->name('value');
+        Route::delete('/', 'reset')->name('reset');
+    });
+
+// Tiles handed out by one shared value; /_lumenize/rust/tiles claims from the
+// same value in Rust, and DELETE there starts a new round.
+Route::get('/tiles', [TilesController::class, 'show'])->name('tiles');
+Route::get('/_lumenize/php/tiles', [TilesController::class, 'claim'])->name('tiles.php.claim');
+// Many claims in one request, on the Orbital whose id /_lumenize/rust/tiles/id
+// hands out; /_lumenize/rust/burst is the same in Rust.
+Route::get('/_lumenize/php/burst', [TilesController::class, 'burst'])->name('tiles.php.burst');
+
+// What the TLS handshake verified of the client; /_lumenize/rust/client is
+// the same from Rust.
+Route::get('/_lumenize/php/client', ClientCertificateController::class)->name('client.php');
 
 Route::controller(SessionController::class)
     ->prefix('session')
